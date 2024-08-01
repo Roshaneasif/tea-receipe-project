@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="font-semibold font-serif">
+
+    <div>
+        <nav  class="flex justify-between items-center bg-black p-10 text-white">
+            <h3 class="tracking-wide text-2xl">Tea Recipe App</h3>
+            <form>
+                <input type="text" placeholder="search for recipes.." class="text-black mr-2 p-1 rounded-md" id="searchBox">
+                <button type="submit" class="bg-pink-700 p-1 rounded-lg" id="searchButton">search</button>
+                <button id= 'add recipe' class="bg-pink-700 p-1 rounded-lg">add recipes</button>
+            </form>
+            
+        </nav>
+        <main>
+            <section>
+                <h4 id="mainText" class = "mt-3 text-xl flex justify-center items-center">search your favourite tea recipes....</h4>
+                <div id="recipeContainer" class="text-black mt-3 text-xl grid sm:grid-cols-4 gap-5">
+                </div>
+            </section>
+        </main>
+    </div>
+<script src="script.js"></script>
+</body>
+</html>
