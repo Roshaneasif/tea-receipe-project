@@ -1,150 +1,128 @@
-const searchButton = document.getElementById('searchButton')
-const searchBox = document.getElementById('searchBox')
-const recipeContainer = document.getElementById('recipeContainer')
-const addRecipes = document.getElementById('add recipe')
+document.addEventListener('DOMContentLoaded', function() {
+    const searchButton = document.getElementById('searchButton');
+    const searchBox = document.getElementById('searchBox');
+    const recipeContainer = document.getElementById('recipeContainer');
+    const addRecipeButton = document.getElementById('addRecipeButton');
+    const addRecipeForm = document.getElementById('addRecipeForm');
+    const recipeForm = document.getElementById('recipeForm');
+    const cancelButton = document.getElementById('cancelButton');
 
-//function to get recipes from user 
-let recipeObject ={};
-let userRecipes  = [];
-let choice = 'y';
-addRecipes.addEventListener('click',function(e){
-    e.preventDefault();
-    functionaddRecipes()})
+    let userRecipes = JSON.parse(localStorage.getItem('userRecipes')) || [];
 
-function functionaddRecipes(){
-while(choice == 'y' || choice == 'Y'){
-let recipetitle; 
-let recipeDescription;
-// imgAdress = prompt('enter img address');
-recipetitle = prompt('enter recipe name')
-recipeDescription = prompt('enter recipe description')
-recipeObject = {
-    // image: imgAdress,
-    title: recipetitle,
-    recipe: recipeDescription
-}
-userRecipes.push(recipeObject);
-// console.log(userRecipes)
- choice = prompt("press 'y' or 'Y' if you wanna add more? ")
-}
-}
+    //Array of hard coded recipes 
+    const hardcodedRecipes = [
+        { title: "Masala Chai", recipe: "A spiced tea made with milk, sugar, and black tea leaves." },
+        { title: "Green Tea", recipe: "A healthy tea made with green tea leaves, best served without sugar." },
+        { title: "Ginger Tea", recipe: "A refreshing tea made with ginger, lemon, and honey." },
+        { title: "Black Tea", recipe: "A classic tea made with black tea leaves and served with or without milk." },
+        { title: "Mint Tea", recipe: "A soothing tea made with fresh mint leaves, often served with sugar." },
+        { title: "Earl Grey Tea", recipe: "A fragrant tea made with black tea leaves and bergamot orange." },
+        { title: "Chamomile Tea", recipe: "A calming herbal tea made with chamomile flowers." },
+        { title: "Hibiscus Tea", recipe: "A tart and refreshing tea made with dried hibiscus flowers." },
+        { title: "Lemon Tea", recipe: "A zesty tea made with black tea and fresh lemon juice." },
+        { title: "Oolong Tea", recipe: "A traditional Chinese tea that is partially fermented, offering a unique flavor." },
+        { title: "Chai Latte", recipe: "A creamy tea made with spiced tea and steamed milk." },
+        { title: "Peppermint Tea", recipe: "A cool and refreshing tea made with peppermint leaves." }
+    ];
 
-// function to display user entered recipes
+    //it will show recipe from 
+    addRecipeButton.addEventListener('click', function() {
+        addRecipeForm.classList.remove('hidden');
+    });
 
-function updateRecipeContainer(){
-    // localStorage.getItem(userRecipes)
-for (const recipe of userRecipes) {
-    const div = document.createElement('div');
-    div.classList.add('text-white', 'flex-col' ,'bg-black', 'mt-4', 'rounded-md', 'p-2','text-white','items-ceter','justify-center', 'sm-h-screen', 'w-50', 'h-50','mr-2');
+    //it will hde the form 
+    cancelButton.addEventListener('click', function() {
+        addRecipeForm.classList.add('hidden');
+    });
 
-    const img = document.createElement('img');
-    img.src = "https://images.pexels.com/photos/327136/pexels-photo-327136.jpeg?auto=compress&cs=tinysrgb&w=600";
-    img.alt = `"${recipe.title}"`; 
-    div.appendChild(img);
+    //form submission 
+    recipeForm.addEventListener('submit', function(e) {
+        e.preventDefault();
 
-    const heading = document.createElement('h3');
-    heading.innerText = `${recipe.title} recipe`;
-    console.log(heading);
-    div.appendChild(heading);
+        const recipeTitle = document.getElementById('recipeTitle').value;
+        const recipeDescription = document.getElementById('recipeDescription').value;
 
-    const recipeViewButton = document.createElement('button');
-    recipeViewButton.innerText = 'View Recipe';
-    // recipeViewButton.classList.add('flex', 'items-center', 'justify-center', 'bg-orange-300')
-    div.appendChild(recipeViewButton);
-    recipeViewButton.addEventListener('click', ()=>{
-        console.log('clicked');
-        const div = document.createElement('div')
-        div.classList.add('fixed', 'hidden', 'top-0', 'left-0', 'right-0', 'bottom-0', 'flex', 'items-center', 'justify-center', 'bg-black', 'bg-opacity-50')
-        const p = document.createElement('p')
-        p.innerText = recipe.recipe
-        div.appendChild(p)
-        const close = document.createElement('button')
-        close.innerText = 'close'
-        div.appendChild(close)
-        console.log(div);
-        document.body.appendChild(div)
-    })
-    recipeContainer.appendChild(div);
-  }
-}
-// console.log(recipeContainer);
-//function to get search value from user
-let recipeCreated = false;
-let searchValue
-searchButton.addEventListener('click',function(e){
-    e.preventDefault();
-    searchValue = searchBox.value;
-    // console.log(searchValue);
-    
-    // localStorage.setItem(serachValue)
-    // console.log(serachValue);
-if(recipeCreated==false){
-    {
-        recipeCreated = true;
-        recipes();
-    }  
-}
-// console.log(recipeCreated);
-})
+        const recipeObject = {
+            title: recipeTitle,
+            recipe: recipeDescription
+        };
 
-//+++++++++++++++++++++ hard coded recipes +++++++++++++++++++++++++++
+        userRecipes.push(recipeObject);
+        localStorage.setItem('userRecipes', JSON.stringify(userRecipes));
 
-let recipes = function(){
-    const mainText = document.getElementById('mainText')
-    mainText.innerHTML = null
+        //it will clear the form fields
+        recipeForm.reset();
+        addRecipeForm.classList.add('hidden');
 
-    //recipe1
+        //adding new recipes in recipe container
+        updateRecipeContainer(userRecipes);
+    });
 
-    if(searchValue.trim() == 'tea'){
-    const div = document.createElement('div');
-    div.classList.add('text-white', 'flex-col' ,'bg-black', 'mt-4', 'rounded-md', 'p-2','text-white', 'items-ceter','justify-center', 'sm-h-screen', 'w-50', 'h-50','mr-2');
-    const img = document.createElement('img');
-    img.src = "https://images.pexels.com/photos/1638280/pexels-photo-1638280.jpeg?auto=compress&cs=tinysrgb&w=600";
-    img.alt= "masala chai";
-    div.appendChild(img);
-    const heading = document.createElement('h3');
-    heading.innerText="kehwa Recipe";
-    div.appendChild(heading);
-    const recipeViewButton = document.createElement('button');
-    recipeViewButton.innerText = 'view recipe';
-    recipeViewButton.classList.add=('bg-pink-600','ml-4');
-    div.appendChild(recipeViewButton);
-    recipeContainer.appendChild(div);
+    //function to display recipes
+    function updateRecipeContainer(recipes) {
+        recipeContainer.innerHTML = ''; //Clear previous recipes
+        for (const recipe of recipes) {
+            const div = document.createElement('div');
+            div.classList.add('text-white', 'flex-col', 'bg-black', 'mt-4', 'rounded-md', 'p-2', 'items-center', 'justify-center', 'w-50', 'h-50', 'mr-2');
 
-    //recipe2
+            const img = document.createElement('img');
+            img.src = "https://images.pexels.com/photos/327136/pexels-photo-327136.jpeg?auto=compress&cs=tinysrgb&w=600"; // Example image
+            img.alt = recipe.title;
+            div.appendChild(img);
 
-    const div1 = document.createElement('div')
-    div1.classList.add('text-white', 'flex-col' ,'bg-black', 'mt-4', 'rounded-md', 'p-2','text-white','items-ceter','justify-center', 'sm-h-screen', 'w-50', 'h-50','mr-2')
-    const img1 = document.createElement('img')
-    img1.src = "https://media.istockphoto.com/id/1480359250/photo/warm-dirty-chai-latte.jpg?s=612x612&w=0&k=20&c=flDB9EoyX8NS0_FEw-1oRPQTwGXx_TXrPsDWcF8KMcQ="
-    img1.alt= "masala chai"
-    div1.appendChild(img1)
-    const heading1 = document.createElement('h3')
-    heading1.innerText="Masala Chai Recipe"
-    div1.appendChild(heading1);
-    const recipeViewButton1 = document.createElement('button')
-    recipeViewButton1.innerText = 'view recipe'
-    recipeViewButton1.classList.add=('bg-pink-600')
-    div1.appendChild(recipeViewButton1);
-    recipeContainer.appendChild(div1)
+            const heading = document.createElement('h3');
+            heading.innerText = `${recipe.title} recipe`;
+            div.appendChild(heading);
 
-    //recipe 3
+            const recipeViewButton = document.createElement('button');
+            recipeViewButton.innerText = 'View Recipe';
+            recipeViewButton.classList.add('mt-2', 'bg-pink-700', 'text-white', 'p-2', 'rounded-lg');
+            
+            recipeViewButton.addEventListener('click', () => {
+                const modal = document.createElement('div');
+                modal.classList.add('fixed', 'inset-0', 'flex', 'items-center', 'justify-center', 'bg-black', 'bg-opacity-50');
+                
+                const modalContent = document.createElement('div');
+                modalContent.classList.add('bg-white', 'p-6', 'rounded-lg', 'w-11/12', 'sm:w-96');
+                
+                const recipeText = document.createElement('p');
+                recipeText.innerText = recipe.recipe;
+                modalContent.appendChild(recipeText);
+                
+                const closeButton = document.createElement('button');
+                closeButton.innerText = 'Close';
+                closeButton.classList.add('mt-4', 'bg-pink-700', 'text-white', 'p-2', 'rounded-lg');
+                closeButton.addEventListener('click', () => {
+                    document.body.removeChild(modal);
+                });
+                
+                modalContent.appendChild(closeButton);
+                modal.appendChild(modalContent);
+                document.body.appendChild(modal);
+            });
+            
+            div.appendChild(recipeViewButton);
+            recipeContainer.appendChild(div);
+        }
+    }
 
-    const div2 = document.createElement('div')
-    div2.classList.add('text-white', 'flex-col' ,'bg-black', 'mt-4', 'rounded-md', 'p-2','text-white', 'items-ceter','justify-center', 'sm-h-screen', 'w-50', 'h-50','mr-2')
-    const img2 = document.createElement('img')
-    img2.src = "istockphoto-598139490-612x612.jpg"
-    img2.alt= "masala chai"
-    div2.appendChild(img2)
-    const heading2 = document.createElement('h3')
-    heading2.innerText="indian tea Recipe"
-    div2.appendChild(heading2);
-    const recipeViewButton2 = document.createElement('button')
-    recipeViewButton2.classList.add=('bg-pink-600')
-    recipeViewButton2.innerText = 'view recipe'
-    div2.appendChild(recipeViewButton2);
-    recipeContainer.appendChild(div2)
-    ///function calling
-    updateRecipeContainer()
-}
-}
+    //merging hardcoded recipes and user entered recipes
+    function initRecipes() {
+        const allRecipes = [...hardcodedRecipes, ...userRecipes];
+        updateRecipeContainer(allRecipes);
+    }
+
+    //function to search recipes
+    searchButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        const searchValue = searchBox.value.trim().toLowerCase();
+
+        if (!searchValue) return;
+
+        const allRecipes = [...hardcodedRecipes, ...userRecipes];
+        const foundRecipes = allRecipes.filter(recipe => recipe.title.toLowerCase().includes(searchValue));
+
+        updateRecipeContainer(foundRecipes); //it will display only the found recipes
+    });
+    initRecipes();
+});
